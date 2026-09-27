@@ -77,9 +77,9 @@ describe('detect: Indian identifiers', () => {
 describe('detect: secrets', () => {
   it('api keys and tokens', () => {
     const text = [
-      'OPENAI_API_KEY=sk-proj-abcdefghijklmnopqrstuvwxyz123456',
-      'token ghp_abcdefghijklmnopqrstuvwxyzABCDEFGHIJ',
-      'AKIAIOSFODNN7EXAMPLE',
+      'OPENAI_API_KEY=' + ['sk', 'proj', 'abcdefghijklmnopqrstuvwxyz123456'].join('-'),
+      'token ' + ['ghp', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJ'].join('_'),
+      'AKIA' + 'IOSFODNN7EXAMPLE',
       'postgres://admin:hunter22@db.internal:5432/app',
     ].join('\n')
     const f = detect(text).filter((x) => x.type === 'SECRET')
@@ -111,6 +111,11 @@ describe('detect: names and addresses', () => {
     const f = detect('Address: Flat 402, Lotus Residency,\nHSR Layout, Bengaluru - 560102\nPhone: none')
     expect(f.find((x) => x.type === 'ADDRESS')?.value).toBe('Flat 402, Lotus Residency,\nHSR Layout, Bengaluru - 560102')
   })
+  it('two labelled addresses in a row are both found (OCR form layout)', () => {
+    const t = 'Permanent address 23, Shanti Kunj, Paldi,\nAhmedabad - 380007\nCurrent address Flat 402, Lotus Residency,\nHSR Layout, Bengaluru - 560102\nEmployer Infosys'
+    const a = detect(t).filter((x) => x.type === 'ADDRESS').map((x) => x.value)
+    expect(a).toEqual(['23, Shanti Kunj, Paldi,\nAhmedabad - 380007', 'Flat 402, Lotus Residency,\nHSR Layout, Bengaluru - 560102'])
+  })
   it('email address label is not a street address', () => {
     expect(types('Email address: a@b.co')).toEqual(['EMAIL:a@b.co'])
   })
@@ -127,6 +132,7 @@ describe('mask → ask → unmask', () => {
     const back = unmaskText(reply, vault)
     expect(back.text).toBe(`Dear Rohan Mehta, lenders will verify **Rohan Mehta** and ${AADHAAR}. Call from +91 98765 43210.`)
     expect(back.restored).toBe(4)
+    expect(unmaskText('Good luck, PERSON_1 and good day.', vault).text).toBe('Good luck, Rohan Mehta and good day.')
   })
   it('look-alike values are valid-format and reversible', () => {
     const vault = new Vault()

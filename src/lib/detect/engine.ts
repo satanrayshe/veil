@@ -106,6 +106,9 @@ export function detect(text: string, opts: DetectOptions = {}): Finding[] {
       if (!hit) continue
       const start = m.index + (hit.start ?? 0)
       const end = m.index + (hit.end ?? m[0].length)
+      // A rule may use less than it matched (e.g. an address stopping at its PIN code);
+      // resume scanning right after what it kept so the next label isn't swallowed.
+      rule.re.lastIndex = Math.max(m.index + 1, end)
       cands.push(
         mk({ type: rule.type, start, end, value: text.slice(start, end), confidence: hit.confidence, reason: hit.reason, detail: hit.detail, source: 'rule' }),
       )

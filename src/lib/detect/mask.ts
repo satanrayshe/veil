@@ -125,7 +125,8 @@ export function unmaskText(text: string, vault: Vault): { text: string; spans: R
   // Tolerate what chatbots do to placeholders: [PERSON_1], PERSON_1, [Person 1], {PERSON-1}, **[PERSON_1]**
   const tokenNames = [...new Set([...tokenMap.keys()].map((k) => k.replace(/_\d+$/, '')))].sort((a, b) => b.length - a.length)
   if (tokenNames.length)
-    parts.push(`[\\[{<(]?\\s*(?<![A-Za-z])(?:${tokenNames.map((n) => n.replace(/_/g, '[_\\s-]?')).join('|')})[_\\s-]?\\d+(?!\\d)\\s*[\\]}>)]?`)
+    // Whitespace is only absorbed inside brackets, never around a bare PERSON_1.
+    parts.push(`(?:[\\[{<(]\\s*)?(?<![A-Za-z])(?:${tokenNames.map((n) => n.replace(/_/g, '[_\\s-]?')).join('|')})[_\\s-]?\\d+(?!\\d)(?:\\s*[\\]}>)])?`)
   const lits = literal.filter((e) => e.replacement.length >= 3).sort((a, b) => b.replacement.length - a.replacement.length)
   for (const e of lits) parts.push(e.replacement.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
 
@@ -199,6 +200,8 @@ export function partialMask(type: EntityType, v: string): string {
       return v.replace(/\d/g, (c, i) => (i >= v.length - 4 ? c : '•'))
     case 'ADDRESS':
       return '[address hidden]'
+    case 'QR_CODE':
+      return v
     default:
       return keepLast(v, 2, '•')
   }

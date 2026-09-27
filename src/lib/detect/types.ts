@@ -17,10 +17,13 @@ export type EntityType =
   | 'ADDRESS'
   | 'PINCODE'
   | 'DOB'
+  | 'PLACE'
+  | 'ORG'
   | 'IP'
   | 'SECRET'
   | 'OTP'
   | 'CUSTOM'
+  | 'QR_CODE'
 
 export type Group = 'identity' | 'financial' | 'contact' | 'personal' | 'secret' | 'custom'
 
@@ -54,10 +57,13 @@ export const ENTITY: Record<EntityType, EntityMeta> = {
   ADDRESS: { label: 'Address', token: 'ADDRESS', group: 'personal', severity: 2, priority: 45 },
   PINCODE: { label: 'PIN code', token: 'PINCODE', group: 'personal', severity: 1, priority: 30 },
   DOB: { label: 'Date of birth', token: 'DOB', group: 'personal', severity: 2, priority: 42 },
+  PLACE: { label: 'Place', token: 'PLACE', group: 'personal', severity: 1, priority: 35 },
+  ORG: { label: 'Organisation', token: 'ORG', group: 'personal', severity: 1, priority: 35 },
   IP: { label: 'IP address', token: 'IP', group: 'secret', severity: 1, priority: 58 },
   SECRET: { label: 'Secret / API key', token: 'SECRET', group: 'secret', severity: 3, priority: 100 },
   OTP: { label: 'OTP / PIN', token: 'OTP', group: 'secret', severity: 3, priority: 96 },
   CUSTOM: { label: 'Watchlist term', token: 'TERM', group: 'custom', severity: 2, priority: 95 },
+  QR_CODE: { label: 'QR code', token: 'QR', group: 'identity', severity: 3, priority: 99 },
 }
 
 export const GROUP_LABEL: Record<Group, string> = {

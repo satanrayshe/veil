@@ -317,7 +317,7 @@ export const RULES: Rule[] = [
   },
   {
     type: 'ADDRESS',
-    re: /(?:\b(?:flat|house|h\.?\s?no\.?|plot|door|apt\.?|apartment|villa|room)|#)\s*(?:no\.?\s*)?[\w/-]*\d[\w/-]*[^\n]{3,140}?(?<!\d)[1-9]\d{2}\s?\d{3}(?!\d)/gi,
+    re: /(?:\b(?:flat|house|h\.?\s?no\.?|plot|door|apt\.?|apartment|villa|room)|#)\s*(?:no\.?\s*)?[\w/-]*\d[\w/-]*(?:[^\n]{3,140}?|[^\n]{3,100}\n[^\n]{0,80}?)(?<!\d)[1-9]\d{2}\s?\d{3}(?!\d)/gi,
     verify: () => ({ confidence: 'high', reason: 'Street address ending in a PIN code' }),
   },
   {
