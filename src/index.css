@@ -1,0 +1,247 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter-tight';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+@theme {
+  --font-sans: 'Inter Tight Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --color-paper: #f3f0e8;
+  --color-sheet: #fbfaf6;
+  --color-ink: #16140f;
+  --color-ink-2: #3b3830;
+  --color-mute: #6f695d;
+  --color-faint: #9a9384;
+  --color-line: #ddd6c6;
+  --color-line-2: #cbc2ad;
+  --color-stamp: #b02614;
+  --color-stamp-soft: #f6e2dc;
+  --color-safe: #2e6b4f;
+  --color-safe-soft: #dfeee5;
+  --color-bar: #0b0b0a;
+
+  --shadow-sheet: 0 1px 0 rgb(40 30 10 / 0.04), 0 10px 30px -18px rgb(40 30 10 / 0.35);
+  --shadow-lift: 0 1px 0 rgb(40 30 10 / 0.05), 0 18px 40px -20px rgb(40 30 10 / 0.45);
+}
+
+:root {
+  color-scheme: light;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-paper);
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* A sheet of paper: the only container style in the app. */
+.sheet {
+  background: var(--color-sheet);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sheet);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-mute);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-weight: 560;
+  font-size: 14.5px;
+  transition: background-color 120ms, color 120ms, border-color 120ms, transform 120ms;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.btn-ink:hover:not(:disabled) {
+  background: #2b2820;
+}
+.btn-ghost {
+  border: 1px solid var(--color-line-2);
+  background: var(--color-sheet);
+  color: var(--color-ink);
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--color-ink-2);
+}
+.btn-sm {
+  height: 32px;
+  padding: 0 11px;
+  font-size: 13px;
+  border-radius: 7px;
+}
+
+.field {
+  width: 100%;
+  height: 38px;
+  padding: 0 11px;
+  border: 1px solid var(--color-line-2);
+  border-radius: 7px;
+  background: #fff;
+  font-size: 14px;
+  color: var(--color-ink);
+}
+.field::placeholder {
+  color: var(--color-faint);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgb(22 20 15 / 0.08);
+}
+
+/* The redaction bar — the brand mark and the hero motion. */
+.bar {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.bar::after {
+  content: '';
+  position: absolute;
+  inset: 0.12em -0.06em -0.06em;
+  background: var(--color-bar);
+  transform-origin: left center;
+  animation: redact 900ms cubic-bezier(0.7, 0, 0.2, 1) 700ms both;
+}
+@keyframes redact {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Scan line over a document while OCR runs. */
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18%;
+  background: linear-gradient(to bottom, transparent, rgb(176 38 20 / 0.08) 70%, rgb(176 38 20 / 0.55) 100%);
+  animation: scan 2.2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes scan {
+  from {
+    top: -18%;
+  }
+  to {
+    top: 100%;
+  }
+}
+
+.fade-in {
+  animation: fade 260ms ease-out both;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar::after,
+  .fade-in {
+    animation: none;
+  }
+  .scan {
+    animation: none;
+    top: auto;
+    bottom: 0;
+  }
+}
+
+/* Highlight backdrop for the prompt editor must match the textarea exactly. */
+.editor {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.65;
+  padding: 14px 16px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  tab-size: 2;
+}
+.editor mark {
+  color: transparent;
+  border-radius: 3px;
+  padding: 0;
+}
+
+.switch {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  flex: none;
+  border-radius: 99px;
+  background: var(--color-line-2);
+  transition: background-color 140ms;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 99px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+  transition: transform 140ms;
+}
+.switch[aria-checked='true'] {
+  background: var(--color-ink);
+}
+.switch[aria-checked='true']::after {
+  transform: translateX(14px);
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-2) transparent;
+}
