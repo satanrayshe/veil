@@ -4,3 +4,7 @@ dist
 .DS_Store
 test-results
 playwright-report
+public/tesseract
+e2e/shots
+tsconfig.tsbuildinfo
+*.tsbuildinfo
