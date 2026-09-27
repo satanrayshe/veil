@@ -8,3 +8,4 @@ public/tesseract
 e2e/shots
 tsconfig.tsbuildinfo
 *.tsbuildinfo
+e2e/video

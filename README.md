@@ -8,7 +8,7 @@ Veil is a privacy tool that runs entirely in your browser. It does three things:
 2. **Share ledger.** Every stamped copy gets a reference like `VEIL-K7M3RX`, recorded only on your device. If a copy turns up somewhere it shouldn't, drop it into Veil: it reads the reference off the image and tells you who you gave it to.
 3. **Prompt shield.** Paste what you're about to send to ChatGPT, Gemini or Claude. Names, IDs, phone numbers, API keys and OTPs become `[PERSON_1]`, `[PAN_1]`, `[SECRET_1]`. Paste the chatbot's reply back and Veil restores the real values, locally.
 
-**Live:** https://satanrayshe.github.io/veil/ · no sign-up · works offline after the first visit
+**Live:** https://satanrayshe.github.io/veil/ · **Demo video (1 min):** https://satanrayshe.github.io/veil/demo.mp4 · no sign-up · works offline after the first visit
 
 Built for **CodeStorm 2026: FutureForge**.
 

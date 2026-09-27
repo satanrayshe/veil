@@ -39,7 +39,12 @@ export default function Home() {
               Shield an AI prompt
             </button>
           </div>
-          <p className="mt-5 text-[13px] text-mute">No sign-up · nothing uploaded · works offline once loaded</p>
+          <p className="mt-5 text-[13px] text-mute">
+            No sign-up · nothing uploaded · works offline once loaded ·{' '}
+            <a className="underline decoration-line-2 underline-offset-2 hover:text-ink" href={`${import.meta.env.BASE_URL}demo.mp4`} target="_blank" rel="noreferrer">
+              watch the 1-minute demo
+            </a>
+          </p>
         </div>
         <SampleCopy />
       </section>
