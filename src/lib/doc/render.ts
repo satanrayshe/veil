@@ -9,7 +9,7 @@ export interface ComposeOptions {
 }
 
 export const footerText = (w: WatermarkSpec) =>
-  `Copy for ${w.recipient || 'recipient'} · ${w.purpose || 'stated purpose'} only · ${w.date} · Ref ${w.code} · not valid for any other use`
+  `Copy for ${w.recipient || 'recipient'} · ${w.purpose || 'stated purpose'} only · ${w.date} · not valid for any other use`
 
 /**
  * Burns redactions (and the optional purpose watermark) into a fresh canvas.
@@ -74,16 +74,24 @@ function drawWatermark(ctx: CanvasRenderingContext2D, W: number, H: number, stri
   ctx.fillStyle = '#b02614'
   ctx.fillRect(0, H, W, Math.max(2, strip * 0.07))
   ctx.fillStyle = '#16140f'
+  ctx.textBaseline = 'middle'
+  // Reference on the right in bold monospace: the part OCR has to read exactly.
+  const mid = H + strip * 0.54
+  const ref = `Ref ${wm.code}`
+  ctx.font = `600 ${Math.round(strip * 0.5)}px "JetBrains Mono", ui-monospace, monospace`
+  ctx.textAlign = 'right'
+  ctx.fillText(ref, W - strip * 0.5, mid)
+  const refW = ctx.measureText(ref).width
   let fs = Math.round(strip * 0.42)
   const foot = footerText(wm)
+  const room = W - strip * 1.5 - refW
   ctx.font = `500 ${fs}px "Inter Tight Variable", system-ui, sans-serif`
-  while (ctx.measureText(foot).width > W - strip && fs > 8) {
+  while (ctx.measureText(foot).width > room && fs > 8) {
     fs--
     ctx.font = `500 ${fs}px "Inter Tight Variable", system-ui, sans-serif`
   }
-  ctx.textBaseline = 'middle'
   ctx.textAlign = 'left'
-  ctx.fillText(foot, strip * 0.5, H + strip * 0.54)
+  ctx.fillText(foot, strip * 0.5, mid)
 }
 
 export function canvasToBlob(c: HTMLCanvasElement, type: 'image/png' | 'image/jpeg', quality = 0.92): Promise<Blob> {

@@ -26,9 +26,15 @@ export default function Ledger() {
       const doc = await loadFile(file)
       const c = doc.pages[0].canvas
       setTrace({ kind: 'busy', msg: 'Reading the reference strip' })
-      // The reference sits in the footer strip; read the bottom first, then the whole page.
-      const band = Math.round(c.height * 0.14)
-      let code = extractCode(await ocrText(c, { left: 0, top: c.height - band, width: c.width, height: band }))
+      // The reference sits in the footer strip: read an enlarged copy of the bottom first, then the whole page.
+      const band = Math.round(c.height * 0.1)
+      const strip = document.createElement('canvas')
+      strip.width = c.width * 2
+      strip.height = band * 2
+      const sctx = strip.getContext('2d')!
+      sctx.imageSmoothingQuality = 'high'
+      sctx.drawImage(c, 0, c.height - band, c.width, band, 0, 0, strip.width, strip.height)
+      let code = extractCode(await ocrText(strip))
       if (!code) {
         setTrace({ kind: 'busy', msg: 'Reading the whole page' })
         code = extractCode(await ocrText(c))
