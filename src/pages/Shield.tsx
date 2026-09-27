@@ -285,6 +285,8 @@ function exampleReply(entries: VaultEntry[]): string {
       CARD: `Block the card ${r} from your banking app.`,
       UPI: `Refunds never need you to share ${r} with a caller.`,
       ADDRESS: `Proof of address for ${r}, such as a utility bill.`,
+      ORG: `Your latest salary slip and an employment letter from ${r}.`,
+      PLACE: `Lenders with a branch in ${r} usually process faster.`,
     }
     lines.push(`- ${say[e.type] ?? `Double-check ${r}.`}`)
   }
